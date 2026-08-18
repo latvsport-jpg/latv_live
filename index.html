@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LATV Premium Pro - Live Flash Pulse Edition</title>
+    <title>LATV Premium Pro - Live Priority Edition</title>
     
     <!-- Video.js CSS -->
     <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
@@ -56,6 +56,66 @@
         }
         body.light-mode { --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; --border: #cbd5e1; }
         
+        /* Welcome Splash Screen Animation */
+        #welcome-splash-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1e293b 0%, #0b1120 100%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 25px;
+            box-sizing: border-box;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+        .splash-logo-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(56, 189, 248, 0.15);
+            border: 3px solid var(--accent);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.4);
+            animation: pulseGlow 2s infinite alternate;
+            margin-bottom: 20px;
+        }
+        @keyframes pulseGlow {
+            0% { transform: scale(0.95); box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
+            100% { transform: scale(1.05); box-shadow: 0 0 35px rgba(56, 189, 248, 0.7); }
+        }
+        .splash-title {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--accent);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .splash-sub {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        .enter-app-btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+            transition: transform 0.2s;
+        }
+        .enter-app-btn:active { transform: scale(0.95); }
+
         @keyframes shimmer {
             0% { background-position: -400px 0; }
             100% { background-position: 400px 0; }
@@ -88,12 +148,6 @@
             opacity: 0.85;
         }
 
-        #login-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .login-card { background: var(--card); padding: 30px 25px; border-radius: 28px; width: 85%; max-width: 350px; text-align: center; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.4); backdrop-filter: blur(15px); }
-        .login-input { width: 100%; padding: 14px; margin: 10px 0; border-radius: 14px; border: 1px solid var(--border); background: rgba(15, 23, 42, 0.6); color: var(--text); box-sizing: border-box; font-size: 14px; outline: none; }
-        .login-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25); }
-        body.light-mode .login-input { background: #f8fafc; color: #0f172a; }
-        
         #landing-ad-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg); z-index: 9998; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .ad-card { background: var(--card); padding: 24px; border-radius: 28px; width: 100%; max-width: 380px; text-align: center; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.4); position: relative; }
         .ad-image-container { width: 100%; height: 240px; background: #000; border-radius: 18px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; border: 1px solid var(--border); }
@@ -108,6 +162,7 @@
         .league-chip.active { background: var(--accent) !important; color: #000 !important; border-color: transparent !important; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4); }
 
         .match-card { background: var(--card); padding: 18px; margin: 12px 15px; border-radius: 24px; border: 1px solid var(--border); text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        .match-card.is-live-card { border: 1.5px solid var(--accent); }
         
         .logo-img { 
             width: 56px; 
@@ -173,7 +228,30 @@
         .watch-btn { background: var(--accent); color: #000; padding: 10px 22px; border-radius: 12px; font-size: 13px; font-weight: bold; border: none; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35); }
         
         .player-wrapper { display: flex; flex-direction: column; width: 100%; position: relative; gap: 12px; margin-top: 10px; }
-        .video-container { position: relative; width: 100%; background: #000; aspect-ratio: 16 / 9; overflow: hidden; }
+        
+        .video-container { 
+            position: relative; 
+            width: 100%; 
+            background: #000; 
+            aspect-ratio: 16 / 9; 
+            max-height: 80vh; 
+            margin: 0 auto;
+            overflow: hidden; 
+        }
+
+        /* ဖုန်းကို အလျားလိုက် (Landscape) လှည့်လိုက်သည့်အခါ မျက်နှာပြင်အပြည့် အလျားရောအနံပါ အပြည့်ပေါ်စေရန် */
+        @media screen and (orientation: landscape) {
+            .video-container {
+                width: 100vw !important;
+                height: 100vh !important;
+                max-height: 100vh !important;
+                aspect-ratio: unset !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                z-index: 99999 !important;
+            }
+        }
         
         body.is-fullscreen { overflow: hidden !important; position: fixed !important; width: 100% !important; height: 100% !important; }
         body.is-fullscreen .marquee-box,
@@ -181,17 +259,16 @@
         body.is-fullscreen .nav-bar,
         body.is-fullscreen .link-scroll,
         body.is-fullscreen .back-btn-container,
-        body.is-fullscreen #login-overlay,
-        body.is-fullscreen #landing-ad-overlay { display: none !important; }
+        body.is-fullscreen #landing-ad-overlay,
+        body.is-fullscreen #welcome-splash-overlay { display: none !important; }
 
-        .video-js { width: 100% !important; height: 100% !important; position: absolute !important; top: 0; left: 0; }
+        .video-js { width: 100% !important; height: 100% !important; position: absolute !important; top: 0; left: 0; object-fit: cover !important; }
         .video-js.vjs-fullscreen { 
             width: 100vw !important; height: 100vh !important; max-height: 100vh !important; min-height: 100vh !important;
             position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
             z-index: 999999 !important; background: #000 !important; object-fit: cover !important;
         }
 
-        /* Watermark ပုံစံ - ဘယ်ဘက်တွင် လင်းနေသော LIVE နှင့် ညာဘက်တွင် အသေဖြစ်သော LATV */
         .video-overlay-group { 
             position: absolute; 
             top: 15px; 
@@ -285,7 +362,6 @@
             transition: opacity 0.4s ease;
         }
         
-        /* ဘောလုံးလှည့်သည့် Animation (Spin Animation) */
         @keyframes footballSpin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -295,26 +371,39 @@
             line-height: 1;
             display: inline-block;
             user-select: none;
-            animation: footballSpin 1.2s infinite linear; /* ဘောလုံး အမြဲတမ်းလည်နေမည် */
+            animation: footballSpin 1.2s infinite linear;
         }
         .loading-overlay.hidden {
             opacity: 0;
             pointer-events: none;
         }
         .video-js .vjs-loading-spinner { display: none !important; }
+
+        .telegram-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #24A1DE;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(36, 161, 222, 0.4);
+            margin-top: 10px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
 
-<!-- Login Overlay -->
-<div id="login-overlay">
-    <div class="login-card">
-        <h2 style="margin-top:0; margin-bottom:8px; color:var(--accent);">LATV Premium</h2>
-        <input type="text" id="phone" class="login-input" placeholder="ဖုန်းနံပါတ် (ID)">
-        <input type="password" id="password" class="login-input" placeholder="Password">
-        <button class="nav-btn" style="width:100%; margin-top:15px; height:50px; max-width:100%; background:var(--accent); color:#000;" onclick="handleLogin()">Login ဝင်ရန်</button>
-        <p style="font-size:12px; color:#94a3b8; margin-top:20px; line-height: 1.5;">Admin ဆက်သွယ်ရန်:<br>📱 09960098600</p>
-    </div>
+<!-- Welcome / Landing Screen Overlay -->
+<div id="welcome-splash-overlay">
+    <div class="splash-logo-circle">⚽</div>
+    <div class="splash-title">LATV PREMIUM</div>
+    <div class="splash-sub">ဘောလုံးပွဲစဉ်များနှင့် TV လိုင်းများကို<br>တိုက်ရိုက် အခမဲ့ ကြည့်ရှုပါ</div>
+    <button class="enter-app-btn" onclick="closeWelcomeSplash()">ကြည့်ရှုရန် ဝင်မည်</button>
 </div>
 
 <!-- Landing Ad Screen Overlay -->
@@ -329,6 +418,9 @@
             <span style="color:#94a3b8; font-size:13px;">ကြော်ငြာပုံ ရယူနေသည်...</span>
         </div>
         <button class="skip-ad-btn" onclick="closeLandingAd()">ဆက်လက်ကြည့်ရှုမည် (<span id="ad-countdown">5</span>s)</button>
+        <a href="https://t.me/livechinnel2025" target="_blank" class="telegram-btn">
+            <span>✈ Telegram Admin သို့ ဆက်သွယ်ရန်</span>
+        </a>
     </div>
 </div>
 
@@ -375,7 +467,10 @@
 </div>
 
 <script>
-    const firebaseConfig = { apiKey: "AIzaSy...", projectId: "footballlive2027" };
+    const firebaseConfig = { 
+        apiKey: "YOUR_FIREBASE_API_KEY_HERE", 
+        projectId: "footballlive2027" 
+    };
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const db = firebase.firestore();
     
@@ -388,7 +483,6 @@
     let activeDataList = [];
     let currentStreamList = [];
     let currentStreamIndex = 0;
-    let authListener = null;
     let matchesListener = null; 
     let adTimerInterval = null;
     let selectedLeagueFilter = 'All';
@@ -406,8 +500,6 @@
     }
 
     window.onload = function() {
-        let savedPhone = localStorage.getItem("userPhone");
-        let isLoggedIn = localStorage.getItem("isLoggedIn");
         let savedTheme = localStorage.getItem("themeMode");
         let savedAccent = localStorage.getItem("userAccentTheme");
 
@@ -415,12 +507,16 @@
         if (savedAccent && savedAccent !== 'default') {
             document.body.classList.add(savedAccent);
         }
-
-        if (isLoggedIn === "true" && savedPhone) {
-            document.getElementById('login-overlay').style.display = 'none';
-            showLandingAdAndInit();
-        }
     };
+
+    function closeWelcomeSplash() {
+        let splash = document.getElementById('welcome-splash-overlay');
+        splash.style.opacity = '0';
+        setTimeout(() => {
+            splash.style.display = 'none';
+            showLandingAdAndInit();
+        }, 500);
+    }
 
     function setAccentColor(colorThemeClass) {
         document.body.classList.remove('theme-purple', 'theme-green', 'theme-orange', 'theme-pink', 'theme-cyan');
@@ -430,33 +526,6 @@
         } else {
             localStorage.setItem("userAccentTheme", "default");
         }
-    }
-
-    function handleLogin() {
-        const phone = document.getElementById('phone').value.trim();
-        const pass = document.getElementById('password').value.trim();
-        if(!phone || !pass) { alert("ဖုန်းနံပါတ် နှင့် Password ထည့်ပါ။"); return; }
-
-        db.collection("users").doc(phone).get().then(doc => {
-            if (doc.exists) {
-                let userData = doc.data();
-                if (userData.expiryDate && new Date() > userData.expiryDate.toDate()) {
-                    alert("သင့်အကောင့် သက်တမ်းကုန်ဆုံးသွားပါပြီ။");
-                    return;
-                }
-                if (userData.password === pass && (userData.isActive === true || userData.isActive === "true")) {
-                    localStorage.setItem("isLoggedIn", "true");
-                    localStorage.setItem("userPhone", phone);
-                    localStorage.setItem("userPassword", pass);
-                    localStorage.setItem("userExpireDate", userData.expiryDate ? userData.expiryDate.toDate().toLocaleDateString() : "သတ်မှတ်ချက် မရှိသေးပါ");
-                    
-                    document.getElementById('login-overlay').style.display = 'none';
-                    showLandingAdAndInit();
-                } else {
-                    alert("ID သို့မဟုတ် Password မှားယွင်းနေသည် သို့မဟုတ် အကောင့်ပိတ်ထားပါသည်။");
-                }
-            } else { alert("အကောင့်မရှိပါ။ Admin သို့ ဆက်သွယ်ပါ။"); }
-        }).catch(err => alert("Error: " + err.message));
     }
 
     function showLandingAdAndInit() {
@@ -507,41 +576,15 @@
 
     function initApp() {
         db.collection("settings").doc("announcement").get().then(doc => {
-            if (doc.exists) document.getElementById("notice-text").innerText = doc.data().noticeText || 'Welcome to LATV Premium';
+            if (doc.exists) document.getElementById("notice-text").innerText = doc.data().noticeText || 'Welcome to LATV Free Edition';
         });
 
-        let userPhone = localStorage.getItem("userPhone");
-        let savedPass = localStorage.getItem("userPassword");
-
-        if (userPhone) {
-            if (authListener) authListener(); 
-            authListener = db.collection("users").doc(userPhone).onSnapshot(doc => {
-                if (doc.exists) {
-                    let userData = doc.data();
-                    if (userData.isActive !== true && userData.isActive !== "true") { alert("သင့်အကောင့်ကို Admin မှ ပိတ်လိုက်ပါပြီ။"); forceLogout(); return; }
-                    if (userData.password && userData.password !== savedPass) { alert("Password ပြောင်းလဲသွားပါပြီ။"); forceLogout(); return; }
-                    if (userData.expiryDate && new Date() > userData.expiryDate.toDate()) { alert("သက်တမ်းကုန်ဆုံးသွားပါပြီ။"); forceLogout(); return; }
-                } else { forceLogout(); }
-            });
-        }
-        
         fetchData('football');
         
         if (countdownInterval) clearInterval(countdownInterval);
         countdownInterval = setInterval(() => {
             if (viewMode === 'matches' && allMatchesData.length > 0 && currentType === 'football') renderMatches(allMatchesData);
         }, 1000);
-    }
-
-    function forceLogout() {
-        if (authListener) { authListener(); authListener = null; }
-        if (matchesListener) { matchesListener(); matchesListener = null; }
-        cleanupPlayer();
-        localStorage.clear();
-        document.getElementById('landing-ad-overlay').style.display = 'none';
-        document.getElementById('login-overlay').style.display = 'flex';
-        document.getElementById('phone').value = '';
-        document.getElementById('password').value = '';
     }
 
     function showSkeletonLoader() {
@@ -696,23 +739,36 @@
 
     function renderMatches(dataList) {
         if (viewMode !== 'matches') return;
-        activeDataList = dataList;
+        
+        let sortedList = [...dataList].sort((a, b) => {
+            let aCountdown = getMatchCountdown(a.time || "21:00");
+            let bCountdown = getMatchCountdown(b.time || "21:00");
+            
+            let aIsLive = (a.isLiveNow === true || a.isLiveNow === "true" || aCountdown.isLive);
+            let bIsLive = (b.isLiveNow === true || b.isLiveNow === "true" || bCountdown.isLive);
+
+            if (aIsLive && !bIsLive) return -1;
+            if (!aIsLive && bIsLive) return 1;
+            return 0;
+        });
+
+        activeDataList = sortedList;
         let html = "";
         
         if (currentType === 'football') {
-            let filteredList = dataList.filter(d => {
+            let filteredList = sortedList.filter(d => {
                 let lName = d.league || 'General';
                 return selectedLeagueFilter === 'All' || lName === selectedLeagueFilter;
             });
 
             filteredList.forEach((d) => {
-                let originalIndex = dataList.indexOf(d);
+                let originalIndex = sortedList.indexOf(d);
                 let countdownInfo = getMatchCountdown(d.time || "21:00");
                 let isLive = (d.isLiveNow === true || d.isLiveNow === "true" || countdownInfo.isLive);
                 let badgeClass = isLive ? 'live-pulse' : countdownInfo.cssClass;
                 let badgeText = isLive ? 'LIVE' : countdownInfo.text;
 
-                html += `<div class="match-card">
+                html += `<div class="match-card ${isLive ? 'is-live-card' : ''}">
                     <div style="font-size: 12px; color: var(--accent); font-weight: bold; margin-bottom: 8px; text-align: left;">🏆 ${d.league || 'General'}</div>
                     <div style="display:flex; justify-content:center; align-items:center; margin:12px 0;">
                         <div><img src="${d.logoA || ''}" class="logo-img"><br><b style="font-size:14px; margin-top:5px; display:inline-block;">${d.teamA || ''}</b></div>
@@ -728,7 +784,7 @@
                 </div>`;
             });
         } else if (currentType === 'tv') {
-            dataList.forEach((d, index) => {
+            sortedList.forEach((d, index) => {
                 let displayName = d.channelName || d.title || d.name || d.teamA || 'TV Channel';
                 let displayLogo = d.logo || d.image || d.logoA || '';
                 let timeStr = d.time || "";
@@ -737,7 +793,7 @@
                 let isLive = (d.isLiveNow === true || d.isLiveNow === "true" || countdownInfo.isLive || timeStr.toLowerCase() === "live");
                 let badgeHtml = timeStr ? `<div class="${isLive ? 'live-pulse' : 'countdown-box'}" style="font-size:11px; padding:3px 8px;">${isLive ? 'LIVE' : timeStr}</div>` : `<span style="font-size:12px; color:var(--accent);">▶ Ready</span>`;
 
-                html += `<div class="match-card" style="display:flex; align-items:center; gap:15px; text-align:left;">
+                html += `<div class="match-card ${isLive ? 'is-live-card' : ''}" style="display:flex; align-items:center; gap:15px; text-align:left;">
                     <img src="${displayLogo}" class="logo-img" onerror="this.style.display='none'">
                     <div style="flex:1;">
                         <b style="font-size:16px; display:block; margin-bottom:4px; color:var(--text);">${displayName}</b>
@@ -747,7 +803,7 @@
                 </div>`;
             });
         } else if (currentType === 'movie') {
-            dataList.forEach((d, index) => {
+            sortedList.forEach((d, index) => {
                 let movieTitle = d.title || d.name || d.channelName || 'Movie Title';
                 let movieImage = d.logo || d.image || d.logoA || '';
                 let timeStr = d.time || "LIVE";
@@ -756,7 +812,7 @@
                 let isLive = (d.isLiveNow === true || d.isLiveNow === "true" || countdownInfo.isLive || timeStr.toLowerCase() === "live");
                 let badgeHtml = `<div class="${isLive ? 'live-pulse' : 'countdown-box'}" style="font-size:11px; padding:3px 8px;">${isLive ? 'LIVE' : timeStr}</div>`;
 
-                html += `<div class="match-card" style="display:flex; align-items:center; gap:15px; text-align:left;">
+                html += `<div class="match-card ${isLive ? 'is-live-card' : ''}" style="display:flex; align-items:center; gap:15px; text-align:left;">
                     <img src="${movieImage}" class="logo-img" onerror="this.style.display='none'">
                     <div style="flex:1;">
                         <b style="font-size:16px; display:block; margin-bottom:4px; color:var(--text);">${movieTitle}</b>
@@ -778,6 +834,18 @@
     function cleanupPlayer() {
         if (playerInstance) { try { playerInstance.dispose(); } catch(e){} playerInstance = null; }
         document.body.classList.remove('is-fullscreen');
+    }
+
+    function openExternalPlayer(url, playerName) {
+        let targetUrl = url;
+        if (playerName === "Vlc player") {
+            targetUrl = "vlc://" + url;
+        } else if (playerName === "Mix player") {
+            targetUrl = "intent:" + url + "#Intent;package=com.mxtech.videoplayer.ad;type=video/*;end";
+        } else if (playerName === "Mm player") {
+            targetUrl = "intent:" + url + "#Intent;type=video/*;end";
+        }
+        window.location.href = targetUrl;
     }
 
     function playVideo(d) {
@@ -804,7 +872,7 @@
         let selectedPlayer = localStorage.getItem("selectedPlayer") || "Video.js";
 
         if (selectedPlayer !== "Video.js") {
-            window.open(streamLinks[0].url, '_blank');
+            openExternalPlayer(streamLinks[0].url, selectedPlayer);
             return;
         }
 
@@ -823,7 +891,7 @@
                         <div class="live-pulse" style="font-size:12px; padding:4px 10px;">LIVE</div>
                         <div class="watermark">LATV</div>
                     </div>
-                    <video-js id="my-video" class="vjs-big-play-centered" controls preload="auto" data-setup='{}'></video-js>
+                    <video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto" playsinline style="width:100%; height:100%;"></video>
                 </div>
                 <div class="link-scroll" id="stream-link-scroll">
                     ${streamLinks.map((item, idx) => `<button class="link-btn ${idx === 0 ? 'active' : ''}" onclick="switchStreamByIndex(${idx})">${item.name}</button>`).join('')}
@@ -834,7 +902,9 @@
                 </div>
             </div>`;
         
-        loadStreamToPlayer(currentStreamList[0].url, 0);
+        setTimeout(() => {
+            loadStreamToPlayer(currentStreamList[0].url, 0);
+        }, 100);
     }
 
     function getMimeType(url) {
@@ -843,11 +913,18 @@
         if (cleanUrl.endsWith('.flv')) return 'video/x-flv';
         if (cleanUrl.endsWith('.mp3')) return 'audio/mpeg';
         if (cleanUrl.endsWith('.mp4')) return 'video/mp4';
-        return 'video/mp4';
+        return 'application/x-mpegURL';
     }
 
     function loadStreamToPlayer(url, index = 0) {
         currentStreamIndex = index;
+        let selectedPlayer = localStorage.getItem("selectedPlayer") || "Video.js";
+
+        if (selectedPlayer !== "Video.js") {
+            openExternalPlayer(url, selectedPlayer);
+            return;
+        }
+
         let mimeType = getMimeType(url);
 
         let buttons = document.querySelectorAll('#stream-link-scroll .link-btn');
@@ -861,16 +938,28 @@
 
         if (playerInstance) {
             playerInstance.src({ src: url, type: mimeType });
-            playerInstance.play();
+            let playPromise = playerInstance.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Autoplay blocked/failed: ", error);
+                });
+            }
         } else {
             playerInstance = videojs('my-video', {
                 techOrder: ['html5', 'flvjs'],
                 html5: { vhs: { overrideNative: true, smoothQualityChange: true, bandwidth: 5000000 } },
                 liveui: true,
-                fluid: true
+                fluid: true,
+                autoplay: true,
+                controls: true
             }, function() {
                 this.src({ src: url, type: mimeType });
-                this.play();
+                let playPromise = this.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Autoplay blocked/failed: ", error);
+                    });
+                }
 
                 this.on('playing', function() {
                     const sp = document.getElementById('loadingSpinner');
@@ -936,16 +1025,13 @@
         document.getElementById('league-container').style.display = 'none';
         if (matchesListener) { matchesListener(); matchesListener = null; }
         
-        let userPhone = localStorage.getItem("userPhone") || "မရှိပါ";
-        let expireDateText = localStorage.getItem("userExpireDate") || "သတ်မှတ်ချက် မရှိသေးပါ";
         let currentSelectedPlayer = localStorage.getItem("selectedPlayer") || "Video.js";
 
         document.getElementById('app-content').innerHTML = `
             <div class="match-card" style="text-align: left;">
                 <h3 style="margin-top:0; color:var(--accent); font-size:18px;">${t('settingsTitle')}</h3>
-                <p style="font-size:14px;">📱 <b>User ဖုန်းနံပါတ်:</b> ${userPhone}</p>
-                <p style="font-size:14px;">⏳ <b>သက်တမ်းကုန်ဆုံးရက်:</b> ${expireDateText}</p>
-                <p style="font-size:14px;">💻 <b>ဆော့ဝဲဗားရှင်း:</b> v2.9.5 Live Flash Edition</p>
+                <p style="font-size:14px;">🎁 <b>အသုံးပြုမှု:</b> အခမဲ့ ဗားရှင်း (Free Edition)</p>
+                <p style="font-size:14px;">💻 <b>ဆော့ဝဲဗားရှင်း:</b> v2.9.6 Live Flash Free Edition</p>
 
                 <div style="margin: 20px 0; padding: 14px; background: rgba(15, 23, 42, 0.4); border-radius: 16px; border: 1px solid var(--border);">
                     <div style="font-weight: bold; margin-bottom: 10px; color: var(--accent); font-size: 14px;">🌐 ဘာသာစကား (Language)</div>
@@ -976,12 +1062,12 @@
                 
                 <button class="nav-btn" style="width:100%; max-width:100%; height:48px; background:rgba(30, 41, 59, 0.8); border: 1px solid var(--border); margin-top:10px; color:var(--text); border-radius:14px;" onclick="toggleTheme()">☀ အလင်း/အမှောင် ပြောင်းရန်</button>
                 
-                <div style="background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border); padding: 14px; border-radius: 16px; text-align: center; margin-top: 15px;">
-                    <div style="font-size: 13px; color: #94a3b8; margin-bottom: 10px;">📞 Admin ကိုဆက်သွယ်ရန်</div>
-                    <div style="font-size: 16px; font-weight: bold; color: var(--accent); margin-top: 5px;">09960098600</div>
+                <div style="background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border); padding: 16px; border-radius: 16px; text-align: center; margin-top: 15px;">
+                    <div style="font-size: 13px; color: #94a3b8; margin-bottom: 10px;">💬 Admin ကို ဆက်သွယ်ရန်</div>
+                    <a href="https://t.me/livechinnel2025" target="_blank" class="telegram-btn">
+                        <span>✈ Telegram Channel သို့သွားရန်</span>
+                    </a>
                 </div>
-
-                <button class="nav-btn" style="width:100%; max-width:100%; height:48px; background:#ef4444; margin-top:20px; color:#fff; border-radius:14px;" onclick="forceLogout()">🚪 Logout ထွက်ရန်</button>
             </div>`;
     }
 </script>
